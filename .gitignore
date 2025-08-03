@@ -1,2 +1,9 @@
+# Ne pas suivre les clés secrètes
 .env
-log_trades_1m.csv
+
+# Fichiers Python compilés
+__pycache__/
+*.pyc
+
+# Données temporaires
+log_trades_1m.csvsss
