@@ -1,0 +1,12 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+.venv
+.env
+/inspectionProfiles/profiles_settings.xml
+/inspectionProfiles/Project_Default.xml
+/vcs.xml
+/
+/trading.iml
+/modules.xml
+/misc.xml
