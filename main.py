@@ -89,33 +89,33 @@ def place_order(symbol, side, quantity):
 SYMBOL = "BTCUSDT"
 TRADE_QTY = 0.001
 
+while True :
+    try:
+        prices = get_live_data()
+        current_price = prices[-1]
+        predicted_price = predict_next_price(prices)
+        decision = decide_trade(current_price, predicted_price)
 
-try:
-    prices = get_live_data()
-    current_price = prices[-1]
-    predicted_price = predict_next_price(prices)
-    decision = decide_trade(current_price, predicted_price)
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        profit = 0
 
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    profit = 0
+        # 💰 Calcul de profit si SELL après un BUY
+        if decision == "SELL" and last_action == "BUY":
+            profit = (current_price - last_trade_price) * TRADE_QTY
+        elif decision == "BUY" and last_action == "SELL":
+            profit = (last_trade_price - current_price) * TRADE_QTY
 
-    # 💰 Calcul de profit si SELL après un BUY
-    if decision == "SELL" and last_action == "BUY":
-        profit = (current_price - last_trade_price) * TRADE_QTY
-    elif decision == "BUY" and last_action == "SELL":
-        profit = (last_trade_price - current_price) * TRADE_QTY
+        log_trade(timestamp, current_price, predicted_price, decision, profit)
 
-    log_trade(timestamp, current_price, predicted_price, decision, profit)
+        print(f"💡 {timestamp} | Price: {current_price:.2f}, Pred: {predicted_price:.2f}, Action: {decision}, Profit: {profit:.2f}")
 
-    print(f"💡 {timestamp} | Price: {current_price:.2f}, Pred: {predicted_price:.2f}, Action: {decision}, Profit: {profit:.2f}")
+        if decision in ["BUY", "SELL"]:
+            place_order(SYMBOL, decision, TRADE_QTY)
+            last_action = decision
+            last_trade_price = current_price
 
-    if decision in ["BUY", "SELL"]:
-        place_order(SYMBOL, decision, TRADE_QTY)
-        last_action = decision
-        last_trade_price = current_price
+        time.sleep(60)
 
-    time.sleep(60)
-
-except Exception as e:
-    print("⚠️ Error:", e)
-    time.sleep(10)
+    except Exception as e:
+        print("⚠️ Error:", e)
+        time.sleep(10)
