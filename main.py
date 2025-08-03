@@ -20,8 +20,8 @@ def mse(y_true, y_pred):
 
 load_dotenv()  # charge les variables depuis .env
 # === Clés API Binance TESTNET ===
-api_key = os.environ.get("API_KEY")
-api_secret =  os.environ.get("API_SECRET")
+api_key = os.getenv("API_KEY")
+api_secret = os.getenv("API_SECRET")
 
 if not api_key or not api_secret:
     raise ValueError("❌ API key or secret not found in environment variables.")
