@@ -6,4 +6,4 @@ __pycache__/
 *.pyc
 
 # Données temporaires
-log_trades_1m.csvsss
+log_trades_1m.csv
