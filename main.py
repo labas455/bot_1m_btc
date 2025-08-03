@@ -2,7 +2,6 @@ from binance.client import Client
 from tensorflow.keras.models import load_model
 from sklearn.preprocessing import MinMaxScaler
 import numpy as np
-import pandas as pd
 import time
 from datetime import datetime
 import uuid
@@ -90,33 +89,33 @@ def place_order(symbol, side, quantity):
 SYMBOL = "BTCUSDT"
 TRADE_QTY = 0.001
 
-while True:
-    try:
-        prices = get_live_data()
-        current_price = prices[-1]
-        predicted_price = predict_next_price(prices)
-        decision = decide_trade(current_price, predicted_price)
 
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        profit = 0
+try:
+    prices = get_live_data()
+    current_price = prices[-1]
+    predicted_price = predict_next_price(prices)
+    decision = decide_trade(current_price, predicted_price)
 
-        # 💰 Calcul de profit si SELL après un BUY
-        if decision == "SELL" and last_action == "BUY":
-            profit = (current_price - last_trade_price) * TRADE_QTY
-        elif decision == "BUY" and last_action == "SELL":
-            profit = (last_trade_price - current_price) * TRADE_QTY
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    profit = 0
 
-        log_trade(timestamp, current_price, predicted_price, decision, profit)
+    # 💰 Calcul de profit si SELL après un BUY
+    if decision == "SELL" and last_action == "BUY":
+        profit = (current_price - last_trade_price) * TRADE_QTY
+    elif decision == "BUY" and last_action == "SELL":
+        profit = (last_trade_price - current_price) * TRADE_QTY
 
-        print(f"💡 {timestamp} | Price: {current_price:.2f}, Pred: {predicted_price:.2f}, Action: {decision}, Profit: {profit:.2f}")
+    log_trade(timestamp, current_price, predicted_price, decision, profit)
 
-        if decision in ["BUY", "SELL"]:
-            place_order(SYMBOL, decision, TRADE_QTY)
-            last_action = decision
-            last_trade_price = current_price
+    print(f"💡 {timestamp} | Price: {current_price:.2f}, Pred: {predicted_price:.2f}, Action: {decision}, Profit: {profit:.2f}")
 
-        time.sleep(60)
+    if decision in ["BUY", "SELL"]:
+        place_order(SYMBOL, decision, TRADE_QTY)
+        last_action = decision
+        last_trade_price = current_price
 
-    except Exception as e:
-        print("⚠️ Error:", e)
-        time.sleep(10)
+    time.sleep(60)
+
+except Exception as e:
+    print("⚠️ Error:", e)
+    time.sleep(10)
