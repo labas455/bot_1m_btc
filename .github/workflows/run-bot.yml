@@ -1,9 +1,14 @@
 name: Run Crypto Bot
 
 on:
+  push:
+    branches:
+      - main  # ou "master", selon ta branche par défaut
   schedule:
     - cron: "*/5 * * * *"  # Toutes les 5 minutes
   workflow_dispatch:       # Permet exécution manuelle
+
+
 
 jobs:
   run-bot:
